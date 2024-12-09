@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL Query Generator</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJr+Qx4S5kD5v5f5jbbqlc7gF9hbxmDlJ4Tq5Xyt2IbV47QuW7FnkT7D5XExd" crossorigin="anonymous">
+  
+  <!-- Custom CSS -->
+  <style>
+    body {
+  background: linear-gradient(to right, #00b4db, #0083b0);
+  font-family: 'Arial', sans-serif;
+  color: #fff;
+}
+
+.container {
+  max-width: 800px;
+  margin-top: 50px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.btn-submit {
+  background: #ff5f6d;
+  border: none;
+  padding: 10px 30px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-submit:hover {
+  background: #feb47b;
+  transform: scale(1.05);
+}
+
+.result-box {
+  background: #fff;
+  color: #333;
+  padding: 15px;
+  border-radius: 5px;
+  margin-top: 20px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+  max-height: 400px; /* Limit the height */
+  overflow-y: auto;  /* Enable vertical scrolling */
+  overflow-wrap: break-word;  /* Break long words if necessary */
+  word-wrap: break-word;  /* Ensure long text doesn't overflow */
+  white-space: pre-wrap; /* Preserve spaces and line breaks */
+}
+
+.input-box {
+  width: 100%;
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 5px;
+  border: none;
+  margin-bottom: 20px;
+  background: #f4f4f4;
+}
+
+.input-box:focus {
+  outline: none;
+  border: 2px solid #ff5f6d;
+  box-shadow: 0px 0px 5px rgba(255, 95, 109, 0.5);
+}
+
+.footer {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.footer a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 1s ease-out;
+}
+  </style>
+</head>
+<body>
+
+  <div class="container fade-in">
+    <div class="header">
+      <h1>SQL Query Generator</h1>
+      <p>Ask questions and generate SQL queries!</p>
+    </div>
+
+    <form id="queryForm">
+      <input type="text" id="question" class="input-box" placeholder="Ask your question..." required>
+      <button type="submit" class="btn-submit">Generate Query</button>
+    </form>
+
+    <div class="result-box" id="sqlResult">
+      <h5>Generated SQL Query:</h5>
+      <pre id="sqlQuery">Your result will appear here...</pre>
+    </div>
+
+    <div class="footer">
+      <p>&copy; 2024 <a href="https://your-portfolio.com" target="_blank">Hassan</a></p>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gyb9hYX5pDxRgT2p6pplXm/+fRv7mp6NQK2eeN4tnr8NQZ7hBQ" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0Y1D4e+yy7glQ0zviFZ5gItnUMjfbf7d6g93aK2I2S5BzP6U" crossorigin="anonymous"></script>
+
+  <!-- Custom JS for interacting with Flask backend -->
+  <script>
+    document.getElementById("queryForm").addEventListener("submit", async function(event) {
+      event.preventDefault();
+      let question = document.getElementById("question").value;
+      
+      if (!question) return;
+
+      const response = await fetch("/generate_sql", {
+        method: "POST",
+        body: new URLSearchParams({ question: question }),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+
+      const data = await response.json();
+      const sqlQuery = data.sql_query;
+
+      document.getElementById("sqlQuery").textContent = sqlQuery;
+    });
+  </script>
+
+</body>
+</html>
